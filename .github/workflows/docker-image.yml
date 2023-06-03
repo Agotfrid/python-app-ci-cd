@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and tag Docker image
+      run: |
+        docker build . --file Dockerfile -t agotfrid/python-app:latest -t agotfrid/python-app:${{ github.sha }}
+        docker push agotfrid/python-app:latest
+        docker push agotfrid/python-app:${{ github.sha }}
