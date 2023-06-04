@@ -30,13 +30,15 @@ def add_user():
     email = json["email"]
     pwd = json["pwd"]
     if name and email and pwd and request.method == "POST":
-        sql = "INSERT INTO users(user_name, user_email, user_password) " \
+        sql_create_table = "CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY, user_name VARCHAR(100), user_email VARCHAR(100), user_password VARCHAR(100))"
+        sql_insert_user = "INSERT INTO users(user_name, user_email, user_password) " \
               "VALUES(%s, %s, %s)"
         data = (name, email, pwd)
         try:
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.execute(sql, data)
+            cursor.execute(sql_create_table)
+            cursor.execute(sql_insert_user, data)
             conn.commit()
             cursor.close()
             conn.close()
