@@ -1,5 +1,8 @@
 # Use an official Python runtime as a parent image
-FROM python:3.7.16-bullseye
+FROM python:3.8.17-slim-bookworm
+
+# Add C compiler to build uWSGI requirenment
+RUN apt update && apt install -y gcc
 
 # Set the working directory in the container to /app
 WORKDIR /app
