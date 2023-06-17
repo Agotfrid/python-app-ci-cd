@@ -1,15 +1,27 @@
-name: Build and Deploy app
+name: Test, Build and Deploy app
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  test-dockerfile:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Run Snyk to check Dockerfile for vulnerabilities
+        run: |
+          echo ${{ secrets.SNYK_TOKEN }} | snyk auth --stdin
+          snyk container test --file=Dockerfile --severity-threshold=high
+  
+  build:
+    needs: test-dockerfile
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
