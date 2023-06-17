@@ -5,22 +5,22 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-dockerfile:
+  snyk-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Snyk
-        run: npm install -g snyk
-
-      - name: Run Snyk to check Dockerfile for vulnerabilities
-        run: |
-          snyk auth ${{ secrets.SNYK_TOKEN }}
-          snyk container test --file=Dockerfile --severity-threshold=high
+      - uses: actions/checkout@v3
+      - name: Build a Docker image
+        run: docker build -t test-image .
+      - name: Run Snyk to check Docker image for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: test-image
+          args: --severity-threshold=high --file=Dockerfile
   
   build:
-    needs: test-dockerfile
+    needs: snyk-test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
