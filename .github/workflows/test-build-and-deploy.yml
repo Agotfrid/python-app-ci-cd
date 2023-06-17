@@ -16,7 +16,7 @@ jobs:
 
       - name: Run Snyk to check Dockerfile for vulnerabilities
         run: |
-          echo ${{ secrets.SNYK_TOKEN }} | snyk auth --stdin
+          snyk auth ${{ secrets.SNYK_TOKEN }}
           snyk container test --file=Dockerfile --severity-threshold=high
   
   build:
