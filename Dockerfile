@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8.17-slim-bookworm
+FROM python:3.10.13-slim-bookworm
 
 # Add C compiler to build uWSGI requirenment
 RUN apt update && apt install -y gcc
